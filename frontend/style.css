@@ -1,0 +1,369 @@
+/* ── RESET & BASE ─────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0f0f13;
+  color: #e2e2e2;
+  height: 100vh;
+  overflow: hidden; /* No page scroll — only the messages div scrolls */
+}
+
+/* ── LAYOUT: Sidebar + Chat side by side ─────────────────── */
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: #16161e;
+  border-right: 1px solid #2a2a3a;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.tagline {
+  font-size: 0.78rem;
+  color: #666;
+  margin-top: -10px;
+}
+
+.section-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.quick-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.prompt-btn {
+  background: #1e1e2e;
+  border: 1px solid #2a2a3a;
+  color: #ccc;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1.4;
+}
+
+.prompt-btn:hover {
+  background: #252536;
+  border-color: #6c63ff;
+  color: #fff;
+}
+
+.clear-btn {
+  background: transparent;
+  border: 1px solid #3a1a1a;
+  color: #a05050;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.15s;
+  margin-top: auto;
+}
+
+.clear-btn:hover {
+  background: #2a1010;
+  border-color: #ff5555;
+  color: #ff6666;
+}
+
+/* ── MAIN CHAT ───────────────────────────────────────────── */
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Status bar at top */
+.chat-header {
+  padding: 12px 24px;
+  border-bottom: 1px solid #1e1e2e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #666;
+  background: #0f0f13;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #555; /* Grey = checking */
+  transition: background 0.3s;
+}
+
+.status-dot.online  { background: #50fa7b; } /* Green = connected */
+.status-dot.offline { background: #ff5555; } /* Red = error */
+
+/* ── MESSAGES ────────────────────────────────────────────── */
+.messages {
+  flex: 1;
+  overflow-y: auto;  /* This is the ONLY scrollable element */
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+
+/* Shared message styles */
+.message {
+  display: flex;
+  max-width: 75%;
+}
+
+.message-content {
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  white-space: pre-wrap; /* Preserves line breaks from the AI response */
+}
+
+/* User messages → right side, purple */
+.user-message {
+  align-self: flex-end;
+}
+
+.user-message .message-content {
+  background: #6c63ff;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+/* Bot messages → left side, dark card */
+.bot-message {
+  align-self: flex-start;
+}
+
+.bot-message .message-content {
+  background: #1a1a2e;
+  color: #ddd;
+  border: 1px solid #2a2a3a;
+  border-bottom-left-radius: 4px;
+}
+
+/* "Thinking..." animated indicator while waiting for AI */
+.thinking .message-content {
+  background: #171728;
+  border: 1px dashed #4338ca;
+  padding: 12px 18px;
+}
+
+.thinking-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #c4b5fd;
+  font-size: 0.88rem;
+  font-weight: 500;
+  user-select: none;
+}
+
+.thinking-dots {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.thinking-dots span {
+  width: 6px;
+  height: 6px;
+  background-color: #a78bfa;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulseDot 1.4s infinite ease-in-out both;
+}
+
+.thinking-dots span:nth-child(1) { animation-delay: -0.32s; }
+.thinking-dots span:nth-child(2) { animation-delay: -0.16s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes pulseDot {
+  0%, 80%, 100% {
+    transform: scale(0.4);
+    opacity: 0.25;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+    background-color: #50fa7b; /* flashes green highlight */
+  }
+}
+
+/* ── INPUT AREA ──────────────────────────────────────────── */
+.input-area {
+  padding: 16px 24px;
+  border-top: 1px solid #1e1e2e;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  background: #0f0f13;
+}
+
+textarea {
+  flex: 1;
+  background: #1a1a2e;
+  border: 1px solid #2a2a3a;
+  color: #e2e2e2;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  max-height: 150px;
+  overflow-y: auto;
+  line-height: 1.5;
+  transition: border-color 0.15s;
+}
+
+textarea:focus {
+  border-color: #6c63ff;
+}
+
+textarea::placeholder {
+  color: #444;
+}
+
+#sendBtn {
+  background: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+#sendBtn:hover  { background: #7c6fff; }
+#sendBtn:active { transform: scale(0.97); }
+#sendBtn:disabled {
+  background: #333;
+  cursor: not-allowed;
+}
+
+/* ── SCROLLBAR styling (subtle) ──────────────────────────── */
+.messages::-webkit-scrollbar { width: 4px; }
+.messages::-webkit-scrollbar-track { background: transparent; }
+.messages::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 4px; }
+
+/* ── MARKDOWN RENDERING inside bot messages ──────────────────
+   marked.js generates standard HTML tags — we style them here  */
+
+.bot-message .message-content h1,
+.bot-message .message-content h2,
+.bot-message .message-content h3 {
+  color: #a78bfa;         /* Purple headings stand out */
+  margin: 14px 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.bot-message .message-content p {
+  margin-bottom: 10px;
+}
+
+.bot-message .message-content ul,
+.bot-message .message-content ol {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.bot-message .message-content li {
+  margin-bottom: 4px;
+  line-height: 1.6;
+}
+
+/* Inline code: `like this` */
+.bot-message .message-content code {
+  background: #0f0f1a;
+  color: #50fa7b;         /* Green — classic terminal look */
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 0.85em;
+}
+
+/* Code blocks: ```python ... ``` */
+.bot-message .message-content pre {
+  background: #0f0f1a;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  padding: 14px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.bot-message .message-content pre code {
+  background: none;
+  padding: 0;
+  color: #f8f8f2;
+  font-size: 0.88em;
+}
+
+/* Bold and italic */
+.bot-message .message-content strong { color: #fff; font-weight: 700; }
+.bot-message .message-content em     { color: #ccc; font-style: italic; }
+
+/* Horizontal rules (---) */
+.bot-message .message-content hr {
+  border: none;
+  border-top: 1px solid #2a2a3a;
+  margin: 14px 0;
+}
+
+/* Tables */
+.bot-message .message-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+  font-size: 0.88em;
+}
+
+.bot-message .message-content th,
+.bot-message .message-content td {
+  border: 1px solid #2a2a3a;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.bot-message .message-content th {
+  background: #1e1e35;
+  color: #a78bfa;
+}

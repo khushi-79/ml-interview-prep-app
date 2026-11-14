@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ML Interview Prep</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ── SIDEBAR ─────────────────────────────────── -->
+    <aside class="sidebar">
+      <h1 class="logo">🧠 ML Prep</h1>
+      <p class="tagline">Your AI interview coach</p>
+
+      <div class="quick-prompts">
+        <p class="section-label">Quick Prompts</p>
+
+        <!-- Each button sends a preset message to the chat.
+             data-prompt is read by JavaScript — no hardcoding in JS. -->
+        <button class="prompt-btn" data-prompt="Ask me a hard ML interview question">
+          🎯 Quiz me
+        </button>
+        <button class="prompt-btn" data-prompt="What ML topics should I study next based on our conversation?">
+          📚 What to study next
+        </button>
+        <button class="prompt-btn" data-prompt="Explain the attention mechanism simply">
+          💡 Explain Attention
+        </button>
+        <button class="prompt-btn" data-prompt="Explain the difference between bagging and boosting">
+          💡 Bagging vs Boosting
+        </button>
+        <button class="prompt-btn" data-prompt="What are the most common ML interview questions at top tech companies?">
+          🏢 Top company Qs
+        </button>
+      </div>
+
+      <!-- Clears the conversation history on the server -->
+      <button class="clear-btn" id="clearBtn">🗑️ New Chat</button>
+    </aside>
+
+    <!-- ── MAIN CHAT AREA ──────────────────────────── -->
+    <main class="chat-container">
+
+      <div class="chat-header">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Connecting...</span>
+      </div>
+
+      <!-- Messages appear here, scrollable -->
+      <div class="messages" id="messages">
+        <!-- Welcome message shown before user types anything -->
+        <div class="message bot-message">
+          <div class="message-content">
+            👋 Hey! I'm your ML interview coach.<br><br>
+            Try: <em>"explain transformers"</em>, <em>"quiz me on CNNs"</em>, 
+            or <em>"what should I study next?"</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input bar at the bottom -->
+      <div class="input-area">
+        <textarea
+          id="userInput"
+          placeholder="Ask a concept, request a quiz, or say 'what should I study next'..."
+          rows="1"
+        ></textarea>
+        <button id="sendBtn">Send ↑</button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- marked.js: converts Markdown text → HTML
+       e.g. **bold** becomes <strong>bold</strong>
+       We load it from CDN so no install needed. -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
